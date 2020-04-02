@@ -132,7 +132,8 @@ def swc2tif_dt(swc, img):
     return dt
 
 # Generate distance transform based on original image
-# path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly3d/'
+# Store all 3D tif files and swc files into fly_original folder
+# path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
 # for i in range(1,43):
 #     img = loadtiff3d(path_prefix+str(i)+'.tif')
 #     swc = loadswc(path_prefix+str(i)+'.swc')

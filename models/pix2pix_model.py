@@ -101,10 +101,10 @@ class Pix2PixModel(BaseModel):
                 self.real_A = temp_real_A.to(self.device)
                 self.real_B = temp_real_B.to(self.device)
             else:
-                print('before: ', temp_real_A.size())
+                # print('before: ', temp_real_A.size())
                 temp_real_A = torch.unsqueeze(temp_real_A, 1).type(torch.FloatTensor)
                 temp_real_B = torch.unsqueeze(temp_real_B, 1).type(torch.FloatTensor)
-                print(temp_real_A.size())
+                # print(temp_real_A.size())
                 self.real_A = temp_real_A.to(self.device)
                 self.real_B = temp_real_B.to(self.device)
         self.image_paths = input['A_paths' if AtoB else 'B_paths']
