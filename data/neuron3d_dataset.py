@@ -27,7 +27,9 @@ class Neuron3DDataset(BaseDataset):
         # self.B_paths = sorted(make_dataset(self.dir_B, opt.max_dataset_size))
         self.A_paths = make_dataset(self.dir_A, opt.max_dataset_size)
         self.B_paths = make_dataset(self.dir_B, opt.max_dataset_size)
+        # print(self.A_paths)
         self.A_paths.sort(key=lambda x: int(x.rstrip("_gt.tif").split("/")[-1]))
+        # print(self.A_paths[0].rstrip("_gt.tif").rstrip("_gt.tif"))
         self.B_paths.sort(key=lambda x: int(x.rstrip(".tif").split("/")[-1]))
         assert(self.opt.load_size >= self.opt.crop_size)   # crop_size should be smaller than the size of loaded image
         self.input_nc = self.opt.output_nc if self.opt.direction == 'BtoA' else self.opt.input_nc

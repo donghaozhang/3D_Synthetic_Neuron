@@ -22,6 +22,7 @@ class unet3d(nn.Module):
         is_batchnorm=True,
     ):
         super(unet3d, self).__init__()
+        # print('unet3d is being called')
         self.is_deconv = is_deconv
         self.in_channels = in_channels
         self.is_batchnorm = is_batchnorm
@@ -61,20 +62,24 @@ class unet3d(nn.Module):
     def forward(self, inputs):
         conv1 = self.conv1(inputs)
         maxpool1 = self.maxpool1(conv1)
+        # print('conv1', conv1.size())
 
         conv2 = self.conv2(maxpool1)
         maxpool2 = self.maxpool2(conv2)
+        # print('conv2', conv2.size())
 
         conv3 = self.conv3(maxpool2)
         maxpool3 = self.maxpool3(conv3)
+        # print('conv3', conv3.size())
 
         center = self.center(maxpool3)
         # up4 = self.up_concat4(conv3, center)
         up3 = self.up_concat3(conv3, center)
+        # print('up3', up3.size())
         up2 = self.up_concat2(conv2, up3)
+        # print('up2', up2.size())
         up1 = self.up_concat1(conv1, up2)
-
-        # print('up1:', up1.size())
+        # print('up1', up1.size())
         final = self.final(up1)
         # print('final:', final.size())
 

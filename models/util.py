@@ -49,7 +49,6 @@ class conv3DBatchNorm(nn.Module):
         return outputs
 
 
-
 class conv3DBatchNormRelu(nn.Module):
     def __init__(
         self,
