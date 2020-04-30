@@ -44,3 +44,4 @@ test/data/legacy_serialized.pt
 evaluation/.ipynb_checkpoints/
 .ipynb_checkpoints/Untitled1-checkpoint.ipynb
 **/test_ignore
+package

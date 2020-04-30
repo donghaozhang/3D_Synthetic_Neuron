@@ -162,15 +162,16 @@ def swc2tif_dt(swc, img):
 # val = ind[38:]
 
 import subprocess
+
 train = [12, 17, 31, 38, 42, 18, 26, 4, 13, 32, 15, 5, 34, 1, 23, 29, 9, 39, 3, 11, 27, 36, 41, 6, 28, 30, 19, 35, 21, 8, 2, 37, 14, 25, 7, 10, 24]
 val = [33, 16, 20, 22, 40]
 in_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
 out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly3d/'
 
 for t in train:
-    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'trainB/' + str(t) + '.tif'])
-    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'trainA/' + str(t) + '_gt.tif'])
+    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'trainA/' + str(t) + '.tif'])
+    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'trainB/' + str(t) + '_gt.tif'])
 
 for t in val:
-    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'testB/' + str(t) + '.tif'])
-    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'testA/' + str(t) + '_gt.tif'])
+    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'testA/' + str(t) + '.tif'])
+    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'testB/' + str(t) + '_gt.tif'])
