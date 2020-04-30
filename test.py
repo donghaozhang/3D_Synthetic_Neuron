@@ -171,52 +171,12 @@ if __name__ == '__main__':
             # elif opt.save_type == '3d':
             #     save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize, save_type='3d')
     elif opt.save_type == '3d':
-        # dir_A = os.path.join(opt.dataroot, opt.phase + 'A')  # get the image directory
-        # dir_B = os.path.join(opt.dataroot, opt.phase + 'B')
-        # A_paths = make_dataset(dir_A, opt.max_dataset_size)
-        # B_paths = make_dataset(dir_B, opt.max_dataset_size)
-        # A_paths.sort(key=lambda x: int(x.rstrip("_gt.tif").split("/")[-1]))
-        # B_paths.sort(key=lambda x: int(x.rstrip(".tif").split("/")[-1]))
-        # for _, path in enumerate(zip(A_paths, B_paths)):
-        #     id = path[0].split('/')[-1].split('_')[0]
-        #     real_A = loadtiff3d(path[0])
-        #     real_B = loadtiff3d(path[1])
-        #     real_A = real_A.astype(float) / 255.0
-        #     real_B = real_B.astype(float) / 255.0
-        #     crop_size = np.array(opt.crop_size_3d.split('x')).astype(np.int)
-        #     padded_image, pad_range, slice_windows, slice_range, slice_no = sort_slide_window(real_A, crop_size)
-        #     padded_fake_b = np.empty_like(padded_image)
-        #     assert slice_windows.shape[0] == slice_no[0] * slice_no[1] * slice_no[2]
-        #     for i in range(slice_no[0] * slice_no[1] * slice_no[2]):
-        #         print(slice_range[i])
-        #         x_s, x_e, y_s, y_e, z_s, z_e = slice_range[i]
-        #         in_A = padded_image[x_s:x_e, y_s:y_e, z_s:z_e]
-        #         in_data = {'A': in_A, 'B': real_B, 'A_paths': None, 'B_paths': None}
-        #         model.set_input(in_data)
-        #         model.test()
-        #         fake_B = model.get_fake_B()
-        #         fake_B = fake_B.data[0].cpu().float().numpy()
-        #         fake_B[fake_B < 0] = 0
-        #         fake_B *= 255
-        #         fake_B[fake_B >= 255] = 255
-        #         print(fake_B.shape)
-        #         padded_fake_b[x_s:x_e, y_s:y_e, z_s:z_e] = fake_B
-        #     uppadded_fake_b = padded_fake_b[:slice_no[0] * crop_size[0] - pad_range[0],
-        #                     :slice_no[1] * crop_size[1] - pad_range[1],
-        #                     :slice_no[2] * crop_size[2] - pad_range[2]]
-        #     print(real_A.shape, uppadded_fake_b.shape)
-        #     assert real_A.shape == uppadded_fake_b.shape
-        #     result_path = os.path.join(opt.results_dir, opt.name, 'test_full')
-        #     util.util.mkdir(result_path)
-        #     util.util.save_image_3d(uppadded_fake_b, os.path.join(result_path, id+'_fake_B.tif'))
-        #     util.util.save_image_3d(loadtiff3d(path[1]), os.path.join(result_path, id+'_real_B.tif'))
-
             dir_A = os.path.join(opt.dataroot, opt.phase + 'A')
             # dir_A = os.path.join(opt.dataroot, 'taiwan_gt')  # get the image directory
             # dir_B = os.path.join(opt.dataroot, opt.phase + 'B')
             A_paths = make_dataset(dir_A, opt.max_dataset_size)
             # B_paths = make_dataset(dir_B, opt.max_dataset_size)
-            A_paths.sort(key=lambda x: int(x.rstrip("_gt.tif").split("/")[-1]))
+            A_paths.sort(key=lambda x: int(x.rstrip(".tif").split("/")[-1]))
             # B_paths.sort(key=lambda x: int(x.rstrip(".tif").split("/")[-1]))
             for path in A_paths:
                 id = path.split('/')[-1].split('_')[0]
@@ -228,7 +188,7 @@ if __name__ == '__main__':
                 padded_fake_b = np.empty_like(padded_image)
                 assert slice_windows.shape[0] == slice_no[0] * slice_no[1] * slice_no[2]
                 for i in range(slice_no[0] * slice_no[1] * slice_no[2]):
-                    print(slice_range[i])
+                    # print(slice_range[i])
                     x_s, x_e, y_s, y_e, z_s, z_e = slice_range[i]
                     in_A = padded_image[x_s:x_e, y_s:y_e, z_s:z_e]
                     in_data = {'A': in_A, 'B': in_A, 'A_paths': None, 'B_paths': None}
@@ -236,17 +196,17 @@ if __name__ == '__main__':
                     model.test()
                     fake_B = model.get_fake_B()
                     fake_B = fake_B.data[0].cpu().float().numpy()
-                    print(np.unique(fake_B))
+                    # print(np.unique(fake_B))
                     fake_B[fake_B < 0] = 0
                     fake_B *= 255
-                    print(np.unique(fake_B))
+                    # print(np.unique(fake_B))
                     fake_B[fake_B >= 255] = 255
-                    print(fake_B.shape)
+                    # print(fake_B.shape)
                     padded_fake_b[x_s:x_e, y_s:y_e, z_s:z_e] = fake_B
                 uppadded_fake_b = padded_fake_b[:slice_no[0] * crop_size[0] - pad_range[0],
                                   :slice_no[1] * crop_size[1] - pad_range[1],
                                   :slice_no[2] * crop_size[2] - pad_range[2]]
-                print(real_A.shape, uppadded_fake_b.shape)
+                # print(real_A.shape, uppadded_fake_b.shape)
                 assert real_A.shape == uppadded_fake_b.shape
                 result_path = os.path.join(opt.results_dir, opt.name, 'test_full')
                 util.util.mkdir(result_path)
