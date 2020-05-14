@@ -180,6 +180,7 @@ if __name__ == '__main__':
             # B_paths.sort(key=lambda x: int(x.rstrip(".tif").split("/")[-1]))
             for path in A_paths:
                 id = path.split('/')[-1].split('_')[0]
+                id = id.split('.')[0]
                 real_A = loadtiff3d(path)
                 real_A = real_A.astype(float) / 255.0
                 # real_B = real_B.astype(float) / 255.0
