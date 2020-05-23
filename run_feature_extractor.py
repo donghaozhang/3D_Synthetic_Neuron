@@ -4,7 +4,8 @@ import torch
 from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
-from models.networks import unet3d
+from torch.autograd import Variable
+from models.networks import unet3d, unet3d_fea_extractor
 if __name__ == '__main__':
 
     opt = TestOptions().parse()  # get test options
@@ -28,23 +29,20 @@ if __name__ == '__main__':
     model = create_model(opt)  # create a model given opt.model and other options
     # print(model.netG)
 
-    netG = unet3d()
-    # modelpath = './checkpoints/'
-    # modelstate = torch.load('./runs/lesion_test/inpaint_model.pth')['state_dict']
+    netG = unet3d_fea_extractor()
     epoch = 'latest'
     name = 'G'
     load_filename = '%s_net_%s.pth' % (epoch, name)
-    print(load_filename)
     save_dir = os.path.join(opt.checkpoints_dir, opt.name)
     load_path = os.path.join(save_dir, load_filename)
     modelstate = torch.load(load_path)
-    print(modelstate.keys())
     netG.load_state_dict(modelstate)
 
-    # channels = 3
-    # bSz = 1
-    # input = torch.FloatTensor(bSz, channels, 256, 256)
-    # input_var = Variable(input).cuda()
+    #
+    input = torch.FloatTensor(1, 1, 128, 64, 64)
+    input_var = Variable(input).cuda()
+    netG.eval()
+    netG(input)
     # mask = torch.FloatTensor(bSz, channels, 256, 256)
     # mask_var = Variable(mask).cuda()
     # model = SAUNet_gate().eval().cuda()
