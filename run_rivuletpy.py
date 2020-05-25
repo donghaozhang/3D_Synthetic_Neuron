@@ -35,5 +35,6 @@ for i, file in enumerate(allfiles):
         #swc N x 7 0 sampleid 1 typeid 2 xloc 3 yloc 4 zloc 5 radius 6 parentid
         xloc = swcarray
         swc.save(fname=filepath+'.swc')
+# test
 
 
