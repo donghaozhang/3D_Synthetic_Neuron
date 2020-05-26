@@ -18,6 +18,7 @@ def loadswc(filepath):
                     swc.append(cells)
     return np.array(swc)
 
+
 def saveswc(filepath, swc):
     if swc.shape[1] > 7:
         swc = swc[:, :7]
@@ -26,6 +27,7 @@ def saveswc(filepath, swc):
         for i in range(swc.shape[0]):
             print('%d %d %.3f %.3f %.3f %.3f %d' %
                   tuple(swc[i, :].tolist()), file=f)
+
 
 def loadtiff3d(filepath):
     """Load a tiff file into 3D numpy array"""
@@ -68,6 +70,7 @@ def crop(img):
     zmax = max(z.min() + 5, img.shape[2])
 
     return np.array([[xmin, xmax], [ymin, ymax], [zmin, zmax]])
+
 
 
 '''
@@ -131,47 +134,75 @@ def swc2tif_dt(swc, img):
     dt = (dt/np.max(dt))*255
     return dt
 
+
 # Generate distance transform based on original image
 # Store all 3D tif files and swc files into fly_original folder
-# path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
-# for i in range(1,43):
-#     img = loadtiff3d(path_prefix+str(i)+'.tif')
-#     swc = loadswc(path_prefix+str(i)+'.swc')
-#     img_gt = swc2tif_dt(swc,img)
-#     writetiff3d(path_prefix+str(i)+'_gt.tif', img_gt)
+def store_swc_tif():
+    path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
+    for i in range(1,43):
+        img = loadtiff3d(path_prefix+str(i)+'.tif')
+        swc = loadswc(path_prefix+str(i)+'.swc')
+        img_gt = swc2tif_dt(swc,img)
+        writetiff3d(path_prefix+str(i)+'_gt.tif', img_gt)
+
 
 # Crop the image
-# import subprocess
-# path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
-# out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
-# for i in range(1, 43):
-#     img = loadtiff3d(path_prefix + str(i) + '.tif')
-#     img_gt = loadtiff3d(path_prefix + str(i) + '_gt.tif')
-#
-#     x, y, z = crop(img_gt)
-#     img_crop = img[x[0]:x[1], y[0]:y[1], z[0]:z[1]]
-#     img_gt = img_gt[x[0]:x[1], y[0]:y[1], z[0]:z[1]]
-#     writetiff3d(out_prefix + str(i) + '.tif', img_crop)
-#     writetiff3d(out_prefix + str(i) + '_gt.tif', img_gt)
+def crop_im():
+    import subprocess
+    path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
+    out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
+    for i in range(1, 43):
+        img = loadtiff3d(path_prefix + str(i) + '.tif')
+        img_gt = loadtiff3d(path_prefix + str(i) + '_gt.tif')
+
+        x, y, z = crop(img_gt)
+        img_crop = img[x[0]:x[1], y[0]:y[1], z[0]:z[1]]
+        img_gt = img_gt[x[0]:x[1], y[0]:y[1], z[0]:z[1]]
+        writetiff3d(out_prefix + str(i) + '.tif', img_crop)
+        writetiff3d(out_prefix + str(i) + '_gt.tif', img_gt)
+
 
 # Split into training and testing
-# import random
-# ind = [x for x in range(43)]
-# random.shuffle(ind)
-# train = ind[:38]
-# val = ind[38:]
+def split_train_test():
+    import random
+    ind = [x for x in range(43)]
+    random.shuffle(ind)
+    train = ind[:38]
+    val = ind[38:]
 
-import subprocess
 
-train = [12, 17, 31, 38, 42, 18, 26, 4, 13, 32, 15, 5, 34, 1, 23, 29, 9, 39, 3, 11, 27, 36, 41, 6, 28, 30, 19, 35, 21, 8, 2, 37, 14, 25, 7, 10, 24]
-val = [33, 16, 20, 22, 40]
-in_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
-out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly3d/'
+def copy_file():
+    import subprocess
+    train = [12, 17, 31, 38, 42, 18, 26, 4, 13, 32, 15, 5, 34, 1, 23, 29, 9, 39, 3, 11, 27, 36, 41, 6, 28, 30, 19, 35, 21, 8, 2, 37, 14, 25, 7, 10, 24]
+    val = [33, 16, 20, 22, 40]
+    in_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
+    out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly3d/'
 
-for t in train:
-    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'trainA/' + str(t) + '.tif'])
-    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'trainB/' + str(t) + '_gt.tif'])
+    for t in train:
+        subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'trainA/' + str(t) + '.tif'])
+        subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'trainB/' + str(t) + '_gt.tif'])
 
-for t in val:
-    subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'testA/' + str(t) + '.tif'])
-    subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'testB/' + str(t) + '_gt.tif'])
+    for t in val:
+        subprocess.call(['cp', in_prefix + str(t) + '.tif', out_prefix + 'testA/' + str(t) + '.tif'])
+        subprocess.call(['cp', in_prefix + str(t) + '_gt.tif', out_prefix + 'testB/' + str(t) + '_gt.tif'])
+
+
+# Crop the image
+def crop_swc():
+    import subprocess
+    path_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/fly_original/'
+    out_prefix = '/home/donghao/Desktop/donghao_v2/3D_Synthetic_Neuron/datasets/datasets/fly/test_crop/'
+    for i in range(1, 43):
+        img = loadtiff3d(path_prefix + str(i) + '.tif')
+        img_gt = loadtiff3d(path_prefix + str(i) + '_gt.tif')
+        swc = loadswc(path_prefix + str(i) + '.swc')
+        x, y, z = crop(img_gt)
+        swc[:,2] = swc[:,2]-x[0]
+        swc[:,3] = swc[:,3]-y[0]
+        swc[:,4] = swc[:,4]-z[0]
+        swcoutpath = out_prefix + str(i) + '.swc'
+        saveswc(swcoutpath, swc)
+
+
+if __name__ == '__main__':
+    crop_swc()

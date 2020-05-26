@@ -127,7 +127,8 @@ class unet3d_fea_extractor(nn.Module):
         self.up_concat3 = unetUp3d(filters[3], filters[2], self.is_deconv)
         self.up_concat2 = unetUp3d(filters[2], filters[1], self.is_deconv)
         self.up_concat1 = unetUp3d(filters[1], filters[0], self.is_deconv)
-
+        self.up_sz2 = nn.Upsample(scale_factor=2, mode='trilinear', align_corners=True)
+        self.up_sz4 = nn.Upsample(scale_factor=4, mode='trilinear', align_corners=True)
         # final conv (without any concat)
         # self.final = nn.Conv3d(filters[0], n_classes, 1)
         self.final = nn.Conv3d(filters[0], 1, 1)
@@ -149,15 +150,19 @@ class unet3d_fea_extractor(nn.Module):
         center = self.center(maxpool3)
         # up4 = self.up_concat4(conv3, center)
         up3 = self.up_concat3(conv3, center)
+        up3_out = self.up_sz4(up3)
         print('up3', up3.size())
         up2 = self.up_concat2(conv2, up3)
+        up2_out = self.up_sz2(up2)
         print('up2', up2.size())
         up1 = self.up_concat1(conv1, up2)
         print('up1', up1.size())
         final = self.final(up1)
-        # print('final:', final.size())
+        finalout = torch.cat([up3_out, up2_out], 1)
+        finalout = torch.cat([finalout, up1], 1)
+        print('finalout:', finalout.size())
 
-        return final, up3, up2, up1
+        return finalout
 
 
 class unet3dregStudentRes(nn.Module):
